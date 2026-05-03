@@ -1,0 +1,55 @@
+name: Add a notable player
+description: Submit a player to be highlighted by the Notable Players plugin.
+title: "[Add player] "
+labels: ["new player"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for submitting a player! Fill out the fields below. A maintainer will review and add the entry to `notable_players.json`.
+  - type: input
+    id: username
+    attributes:
+      label: Username
+      description: The exact in-game username. Capitalization and spacing don't matter.
+      placeholder: e.g. Lynx Titan
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which list should this player be added to?
+      options:
+        - Streamer
+        - Jagex Mod
+        - Unique Account
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Short description
+      description: Why is this player notable? One sentence is ideal — this shows in the in-game info panel.
+      placeholder: e.g. First account to 200M XP in all skills
+    validations:
+      required: true
+  - type: textarea
+    id: proof
+    attributes:
+      label: Proof (optional)
+      description: |
+        Links to anything that supports the submission — images, YouTube videos, streams, Twitch channel, hiscores, social media, etc.
+        Paste URLs one per line.
+      placeholder: |
+        https://www.twitch.tv/example
+        https://secure.runescape.com/m=hiscore_oldschool/hiscorepersonal?user1=Example
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have searched existing issues and this player has not already been submitted.
+          required: true
