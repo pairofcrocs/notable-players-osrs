@@ -1,0 +1,38 @@
+name: Update README player list
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/main/resources/com/notableplayers/notable_players.json'
+      - 'scripts/generate_player_list.py'
+      - '.github/workflows/update-readme.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Regenerate README section
+        run: python scripts/generate_player_list.py
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet README.md; then
+            echo "README.md unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Regenerate notable players list"
+          git push

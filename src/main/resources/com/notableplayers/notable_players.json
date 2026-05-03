@@ -8,8 +8,8 @@
     { "name": "Settled", "reason": "YouTube — Swampletics, etc." }
   ],
   "mods": [
-    { "name": "Mod Ash",    "reason": "Jagex Mod — game content" },
-    { "name": "Mod Kieren", "reason": "Jagex Mod" }
+    { "name": "Ash",    "reason": "Jagex Mod — game content" },
+    { "name": "Kieren", "reason": "Jagex Mod" }
   ],
   "uniques": [
     { "name": "Lynx Titan", "reason": "First account to 200M XP in all skills" },

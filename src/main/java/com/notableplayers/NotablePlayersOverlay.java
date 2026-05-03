@@ -46,6 +46,7 @@ public class NotablePlayersOverlay extends Overlay
 
     private static final Color CREATOR_COLOR = new Color(255, 130, 0);
     private static final String CREATOR_LABEL = "Plugin Creator";
+    private static final String JMOD_PREFIX = "Mod ";
 
     void rebuildLookup()
     {
@@ -54,22 +55,22 @@ public class NotablePlayersOverlay extends Overlay
         NotablePlayersData.Bundle bundle = data.load();
         if (config.showCreator())
         {
-            addBundled(bundle.creators, CREATOR_COLOR, CREATOR_LABEL);
+            addBundled(bundle.creators, CREATOR_COLOR, CREATOR_LABEL, "");
         }
-        addBundled(bundle.streamers, config.streamerColor(), config.streamerLabel());
-        addBundled(bundle.mods,      config.modColor(),      config.modLabel());
-        addBundled(bundle.uniques,   config.uniqueColor(),   config.uniqueLabel());
+        addBundled(bundle.streamers, config.streamerColor(), config.streamerLabel(), "");
+        addBundled(bundle.mods,      config.modColor(),      config.modLabel(),      JMOD_PREFIX);
+        addBundled(bundle.uniques,   config.uniqueColor(),   config.uniqueLabel(),   "");
 
         addCustom(config.custom(), config.customColor(), config.customLabel());
     }
 
-    private void addBundled(java.util.List<NotablePlayersData.Entry> entries, Color color, String label)
+    private void addBundled(java.util.List<NotablePlayersData.Entry> entries, Color color, String label, String namePrefix)
     {
         if (entries == null) return;
         for (NotablePlayersData.Entry e : entries)
         {
             if (e == null || e.name == null) continue;
-            String key = Text.standardize(e.name.trim());
+            String key = Text.standardize(namePrefix + e.name.trim());
             if (key.isEmpty()) continue;
             lookup.put(key, new Highlight(color, label, e.reason == null ? "" : e.reason));
         }

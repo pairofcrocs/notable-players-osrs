@@ -11,7 +11,9 @@ body:
     id: username
     attributes:
       label: Username
-      description: The exact in-game username. Capitalization and spacing don't matter.
+      description: |
+        The exact in-game username. Capitalization and spacing don't matter.
+        For Jagex Mods, **omit the "Mod " prefix** — the plugin adds it automatically. Submit just "Ash", not "Mod Ash".
       placeholder: e.g. Lynx Titan
     validations:
       required: true
