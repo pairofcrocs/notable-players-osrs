@@ -4,7 +4,6 @@ A [RuneLite](https://runelite.net) plugin that highlights notable Old School Run
 
 ## What gets highlighted
 
-- **Plugin Creator** — hardcoded; toggle off with the *Show plugin creator* setting.
 - **Streamers** and **Unique Accounts** — bundled, curated lists. Submit additions via [the issue form](../../issues/new/choose).
 - **Jagex Mods** — matched automatically by the reserved `Mod ` name prefix; no submissions needed.
 - **Custom** — your own list, managed in the plugin's config (`Name:Description` per line).
