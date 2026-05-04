@@ -111,6 +111,6 @@ public interface NotablePlayersConfig extends Config
 	@ConfigItem(keyName = "drawInfoPanel", name = "Show info panel",     description = "Show a panel listing nearby notable players and why they're notable", section = displaySection, position = 4)
 	default boolean drawInfoPanel() { return true; }
 
-	@ConfigItem(keyName = "showCreator",   name = "Show plugin creator", description = "Include the plugin creator in highlights and the info panel",        section = displaySection, position = 5)
+	@ConfigItem(keyName = "showCreator",   name = "Show plugin creator", description = "I added myself to the plugin — if you see me in game, come say hi!", section = displaySection, position = 5)
 	default boolean showCreator() { return true; }
 }
