@@ -26,6 +26,7 @@ package com.notableplayers;
 
 import com.google.inject.Provides;
 import javax.inject.Inject;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -44,6 +45,8 @@ public class NotablePlayersPlugin extends Plugin
 	@Inject private NotablePlayersOverlay overlay;
 	@Inject private NotablePlayersMinimapOverlay minimapOverlay;
 	@Inject private NotablePlayersInfoOverlay infoOverlay;
+	@Inject private NotablePlayersData data;
+	@Inject private ClientThread clientThread;
 
 	@Override
 	protected void startUp()
@@ -52,6 +55,7 @@ public class NotablePlayersPlugin extends Plugin
 		overlayManager.add(overlay);
 		overlayManager.add(minimapOverlay);
 		overlayManager.add(infoOverlay);
+		data.refresh(() -> clientThread.invoke(overlay::rebuildLookup));
 	}
 
 	@Override

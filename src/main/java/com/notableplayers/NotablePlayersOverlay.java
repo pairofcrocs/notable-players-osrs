@@ -79,7 +79,7 @@ public class NotablePlayersOverlay extends Overlay
 	{
 		lookup.clear();
 
-		NotablePlayersData.Bundle bundle = data.load();
+		NotablePlayersData.Bundle bundle = data.current();
 		if (config.showCreator())
 		{
 			addBundled(bundle.creators, CREATOR_COLOR, CREATOR_LABEL);

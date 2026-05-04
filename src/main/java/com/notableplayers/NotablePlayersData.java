@@ -25,7 +25,9 @@
 package com.notableplayers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.annotations.SerializedName;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +36,12 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 @Slf4j
 @Singleton
@@ -54,54 +62,121 @@ class NotablePlayersData
 
 	private static final String RESOURCE = "/com/notableplayers/notable_players.json";
 
+	// While the repo is private this URL 404s and the plugin falls back to the
+	// bundled list. The fetch starts working as soon as the repo (or this file)
+	// is publicly readable.
+	private static final HttpUrl REMOTE_URL = HttpUrl.parse(
+		"https://raw.githubusercontent.com/pairofcrocs/notable-players/main/src/main/resources/com/notableplayers/notable_players.json");
+
 	private final Gson gson;
-	private Bundle bundle;
+	private final OkHttpClient httpClient;
+	private final Bundle bundled;
+	private volatile Bundle remote;
 
 	@Inject
-	NotablePlayersData(Gson gson)
+	NotablePlayersData(Gson gson, OkHttpClient httpClient)
 	{
 		this.gson = gson;
+		this.httpClient = httpClient;
+		this.bundled = loadBundled();
 	}
 
-	Bundle load()
+	Bundle current()
 	{
-		if (bundle != null)
+		Bundle b = remote;
+		return b != null ? b : bundled;
+	}
+
+	void refresh(Runnable onUpdated)
+	{
+		if (REMOTE_URL == null)
 		{
-			return bundle;
+			return;
 		}
+		Request req = new Request.Builder().url(REMOTE_URL).build();
+		httpClient.newCall(req).enqueue(new Callback()
+		{
+			@Override
+			public void onFailure(Call call, IOException e)
+			{
+				log.warn("Remote notable players fetch failed: {}", e.getMessage());
+			}
+
+			@Override
+			public void onResponse(Call call, Response response)
+			{
+				try (Response r = response)
+				{
+					if (!r.isSuccessful() || r.body() == null)
+					{
+						log.warn("Remote notable players fetch returned HTTP {}", r.code());
+						return;
+					}
+					Bundle parsed = gson.fromJson(r.body().charStream(), Bundle.class);
+					if (parsed == null)
+					{
+						return;
+					}
+					normalize(parsed);
+					remote = parsed;
+					log.info("Loaded remote notable players list");
+					if (onUpdated != null)
+					{
+						onUpdated.run();
+					}
+				}
+				catch (JsonSyntaxException | IllegalStateException e)
+				{
+					log.warn("Failed to parse remote notable players list", e);
+				}
+			}
+		});
+	}
+
+	private Bundle loadBundled()
+	{
 		try (InputStream in = NotablePlayersData.class.getResourceAsStream(RESOURCE))
 		{
 			if (in == null)
 			{
 				log.warn("Bundled notable player list not found at {}", RESOURCE);
-				bundle = empty();
+				return empty();
 			}
-			else
+			Bundle b = gson.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), Bundle.class);
+			if (b == null)
 			{
-				bundle = gson.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), Bundle.class);
-				if (bundle == null)
-				{
-					bundle = empty();
-				}
+				return empty();
 			}
+			normalize(b);
+			return b;
 		}
-		catch (Exception e)
+		catch (IOException | JsonSyntaxException e)
 		{
 			log.warn("Failed to load bundled notable player list", e);
-			bundle = empty();
+			return empty();
 		}
-		if (bundle.creators == null)  bundle.creators = Collections.emptyList();
-		if (bundle.streamers == null) bundle.streamers = Collections.emptyList();
-		if (bundle.uniques == null)   bundle.uniques = Collections.emptyList();
-		return bundle;
+	}
+
+	private static void normalize(Bundle b)
+	{
+		if (b.creators == null)
+		{
+			b.creators = Collections.emptyList();
+		}
+		if (b.streamers == null)
+		{
+			b.streamers = Collections.emptyList();
+		}
+		if (b.uniques == null)
+		{
+			b.uniques = Collections.emptyList();
+		}
 	}
 
 	private static Bundle empty()
 	{
 		Bundle b = new Bundle();
-		b.creators = Collections.emptyList();
-		b.streamers = Collections.emptyList();
-		b.uniques = Collections.emptyList();
+		normalize(b);
 		return b;
 	}
 }
