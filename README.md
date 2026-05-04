@@ -1,20 +1,21 @@
 # Notable Players
 
-A [RuneLite](https://runelite.net) plugin that highlights notable Old School RuneScape players — streamers, Jagex Mods, unique accounts, and your own custom additions — when they appear near you in-game.
+A [RuneLite](https://runelite.net) plugin that highlights notable Old School RuneScape players when they appear near you in-game.
 
-## Features
+## What gets highlighted
 
-- Outline, tile, label, and minimap highlights per category
-- Floating info panel listing nearby notable players and why they're notable
-- Bundled, curated list of streamers / Jagex Mods / unique accounts
-- A Custom list you manage yourself in the plugin config (`Name:Description` per line)
-- Per-category color and label overrides
+- **Plugin Creator** — hardcoded; toggle off with the *Show plugin creator* setting.
+- **Streamers** and **Unique Accounts** — bundled, curated lists. Submit additions via [the issue form](../../issues/new/choose).
+- **Jagex Mods** — matched automatically by the reserved `Mod ` name prefix; no submissions needed.
+- **Custom** — your own list, managed in the plugin's config (`Name:Description` per line).
+
+Each category has its own configurable color and label. Display options include model outline, tile, floating label, minimap text, and a top-right info panel that lists nearby matches with the reason they're notable. Your own character is never highlighted.
 
 ## Submitting a player
 
 Open an issue using the [**Add a notable player**](../../issues/new/choose) form. You'll be asked for the username, category, a short description, and optional proof links.
 
-For Jagex Mods, **omit the `Mod ` prefix** — the plugin adds it automatically. Submit `Ash`, not `Mod Ash`.
+Jagex Mods do not need to be submitted.
 
 ## Bundled players
 
@@ -31,20 +32,23 @@ The list below is generated automatically from [`notable_players.json`](src/main
 - **Framed** — Speedrunner / streamer
 - **Settled** — YouTube — Swampletics, etc.
 
-### Jagex Mods
-
-- **Mod Ash** — Jagex Mod — game content
-- **Mod Kieren** — Jagex Mod
-
 ### Unique Accounts
 
 - **Lynx Titan** — First account to 200M XP in all skills
 - **Zezima** — Iconic early high-level account
+
+### Jagex Mods
+
+Any player whose name starts with `Mod ` is highlighted automatically.
 <!-- END PLAYERS -->
 
-## Building / running the plugin
+## Building / running
 
 This is a standard RuneLite external-plugin Gradle project.
 
-- `./gradlew run` launches RuneLite with the plugin loaded (uses the bundled test main).
-- `./run-jagex.sh` launches it with credentials borrowed from a currently-running official Jagex Launcher session (macOS).
+- `./gradlew run` launches RuneLite with the plugin loaded.
+- `./run-jagex.sh` (macOS) launches it with credentials borrowed from a currently-running official Jagex Launcher session.
+
+## License
+
+[BSD 2-Clause](LICENSE).

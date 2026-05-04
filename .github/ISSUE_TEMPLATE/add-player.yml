@@ -7,13 +7,13 @@ body:
     attributes:
       value: |
         Thanks for submitting a player! Fill out the fields below. A maintainer will review and add the entry to `notable_players.json`.
+
+        **Note:** Jagex Mods don't need to be submitted — any player whose name starts with `Mod ` is highlighted automatically.
   - type: input
     id: username
     attributes:
       label: Username
-      description: |
-        The exact in-game username. Capitalization and spacing don't matter.
-        For Jagex Mods, **omit the "Mod " prefix** — the plugin adds it automatically. Submit just "Ash", not "Mod Ash".
+      description: The exact in-game username. Capitalization and spacing don't matter.
       placeholder: e.g. Lynx Titan
     validations:
       required: true
@@ -24,7 +24,6 @@ body:
       description: Which list should this player be added to?
       options:
         - Streamer
-        - Jagex Mod
         - Unique Account
     validations:
       required: true

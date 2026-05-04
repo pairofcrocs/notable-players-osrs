@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2026, pairofcrocs
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package com.notableplayers;
 
 import java.awt.BasicStroke;
@@ -8,6 +32,7 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,153 +51,174 @@ import net.runelite.client.util.Text;
 @Singleton
 public class NotablePlayersOverlay extends Overlay
 {
-    private static final Stroke OUTLINE_STROKE = new BasicStroke(2f);
+	private static final Stroke OUTLINE_STROKE = new BasicStroke(2f);
+	private static final Color CREATOR_COLOR = new Color(255, 130, 0);
+	private static final String CREATOR_LABEL = "Plugin Creator";
+	private static final String JMOD_PREFIX = "Mod ";
+	private static final String JMOD_REASON = "Jagex Moderator";
 
-    private final Client client;
-    private final NotablePlayersConfig config;
-    private final NotablePlayersData data;
-    private final Map<String, Highlight> lookup = new HashMap<>();
+	private final Client client;
+	private final NotablePlayersConfig config;
+	private final NotablePlayersData data;
+	private final Map<String, Highlight> lookup = new HashMap<>();
 
-    @Inject
-    NotablePlayersOverlay(Client client, NotablePlayersConfig config, NotablePlayersData data)
-    {
-        this.client = client;
-        this.config = config;
-        this.data = data;
-        setPosition(OverlayPosition.DYNAMIC);
-        setPriority(OverlayPriority.MED);
-        setLayer(OverlayLayer.ABOVE_SCENE);
-    }
+	private Highlight modPrefixHighlight;
 
-    private static final Color CREATOR_COLOR = new Color(255, 130, 0);
-    private static final String CREATOR_LABEL = "Plugin Creator";
-    private static final String JMOD_PREFIX = "Mod ";
+	@Inject
+	NotablePlayersOverlay(Client client, NotablePlayersConfig config, NotablePlayersData data)
+	{
+		this.client = client;
+		this.config = config;
+		this.data = data;
+		setPosition(OverlayPosition.DYNAMIC);
+		setPriority(OverlayPriority.MED);
+		setLayer(OverlayLayer.ABOVE_SCENE);
+	}
 
-    void rebuildLookup()
-    {
-        lookup.clear();
+	void rebuildLookup()
+	{
+		lookup.clear();
 
-        NotablePlayersData.Bundle bundle = data.load();
-        if (config.showCreator())
-        {
-            addBundled(bundle.creators, CREATOR_COLOR, CREATOR_LABEL, "");
-        }
-        addBundled(bundle.streamers, config.streamerColor(), config.streamerLabel(), "");
-        addBundled(bundle.mods,      config.modColor(),      config.modLabel(),      JMOD_PREFIX);
-        addBundled(bundle.uniques,   config.uniqueColor(),   config.uniqueLabel(),   "");
+		NotablePlayersData.Bundle bundle = data.load();
+		if (config.showCreator())
+		{
+			addBundled(bundle.creators, CREATOR_COLOR, CREATOR_LABEL);
+		}
+		addBundled(bundle.streamers, config.streamerColor(), config.streamerLabel());
+		addBundled(bundle.uniques,   config.uniqueColor(),   config.uniqueLabel());
 
-        addCustom(config.custom(), config.customColor(), config.customLabel());
-    }
+		addCustom(config.custom(), config.customColor(), config.customLabel());
 
-    private void addBundled(java.util.List<NotablePlayersData.Entry> entries, Color color, String label, String namePrefix)
-    {
-        if (entries == null) return;
-        for (NotablePlayersData.Entry e : entries)
-        {
-            if (e == null || e.name == null) continue;
-            String key = Text.standardize(namePrefix + e.name.trim());
-            if (key.isEmpty()) continue;
-            lookup.put(key, new Highlight(color, label, e.reason == null ? "" : e.reason));
-        }
-    }
+		modPrefixHighlight = new Highlight(config.modColor(), config.modLabel(), JMOD_REASON);
+	}
 
-    private void addCustom(String raw, Color color, String label)
-    {
-        if (raw == null || raw.isEmpty()) return;
-        for (String line : raw.split("\\R"))
-        {
-            String trimmed = line.trim();
-            if (trimmed.isEmpty()) continue;
+	private void addBundled(List<NotablePlayersData.Entry> entries, Color color, String label)
+	{
+		if (entries == null)
+		{
+			return;
+		}
+		for (NotablePlayersData.Entry e : entries)
+		{
+			if (e == null || e.name == null)
+			{
+				continue;
+			}
+			String key = Text.standardize(e.name.trim());
+			if (key.isEmpty())
+			{
+				continue;
+			}
+			lookup.put(key, new Highlight(color, label, e.reason == null ? "" : e.reason));
+		}
+	}
 
-            String name;
-            String reason;
-            int sep = trimmed.indexOf(':');
-            if (sep >= 0)
-            {
-                name = trimmed.substring(0, sep).trim();
-                reason = trimmed.substring(sep + 1).trim();
-            }
-            else
-            {
-                name = trimmed;
-                reason = "";
-            }
+	private void addCustom(String raw, Color color, String label)
+	{
+		if (raw == null || raw.isEmpty())
+		{
+			return;
+		}
+		for (String line : raw.split("\\R"))
+		{
+			String trimmed = line.trim();
+			if (trimmed.isEmpty())
+			{
+				continue;
+			}
 
-            String key = Text.standardize(name);
-            if (key.isEmpty()) continue;
-            lookup.put(key, new Highlight(color, label, reason));
-        }
-    }
+			String name;
+			String reason;
+			int sep = trimmed.indexOf(':');
+			if (sep >= 0)
+			{
+				name = trimmed.substring(0, sep).trim();
+				reason = trimmed.substring(sep + 1).trim();
+			}
+			else
+			{
+				name = trimmed;
+				reason = "";
+			}
 
-    Highlight matchFor(Player p)
-    {
-        if (p == null || p.getName() == null || lookup.isEmpty() || p == client.getLocalPlayer())
-        {
-            return null;
-        }
-        return lookup.get(Text.standardize(p.getName()));
-    }
+			String key = Text.standardize(name);
+			if (key.isEmpty())
+			{
+				continue;
+			}
+			lookup.put(key, new Highlight(color, label, reason));
+		}
+	}
 
-    boolean isEmpty()
-    {
-        return lookup.isEmpty();
-    }
+	Highlight matchFor(Player p)
+	{
+		if (p == null || p.getName() == null || p == client.getLocalPlayer())
+		{
+			return null;
+		}
+		String name = p.getName();
+		Highlight h = lookup.get(Text.standardize(name));
+		if (h != null)
+		{
+			return h;
+		}
+		if (name.startsWith(JMOD_PREFIX))
+		{
+			return modPrefixHighlight;
+		}
+		return null;
+	}
 
-    @Override
-    public Dimension render(Graphics2D graphics)
-    {
-        if (lookup.isEmpty())
-        {
-            return null;
-        }
+	@Override
+	public Dimension render(Graphics2D graphics)
+	{
+		for (Player p : client.getPlayers())
+		{
+			Highlight h = matchFor(p);
+			if (h == null)
+			{
+				continue;
+			}
+			renderPlayer(graphics, p, h);
+		}
+		return null;
+	}
 
-        for (Player p : client.getPlayers())
-        {
-            Highlight h = matchFor(p);
-            if (h == null)
-            {
-                continue;
-            }
-            renderPlayer(graphics, p, h);
-        }
-        return null;
-    }
+	private void renderPlayer(Graphics2D graphics, Player p, Highlight h)
+	{
+		if (config.drawHull())
+		{
+			Shape hull = p.getConvexHull();
+			if (hull != null)
+			{
+				Stroke prev = graphics.getStroke();
+				graphics.setStroke(OUTLINE_STROKE);
+				graphics.setColor(h.color);
+				graphics.draw(hull);
+				graphics.setStroke(prev);
+			}
+		}
 
-    private void renderPlayer(Graphics2D graphics, Player p, Highlight h)
-    {
-        if (config.drawHull())
-        {
-            Shape hull = p.getConvexHull();
-            if (hull != null)
-            {
-                Stroke prev = graphics.getStroke();
-                graphics.setStroke(OUTLINE_STROKE);
-                graphics.setColor(h.color);
-                graphics.draw(hull);
-                graphics.setStroke(prev);
-            }
-        }
+		if (config.drawTile())
+		{
+			LocalPoint lp = p.getLocalLocation();
+			if (lp != null)
+			{
+				Polygon poly = Perspective.getCanvasTilePoly(client, lp);
+				if (poly != null)
+				{
+					OverlayUtil.renderPolygon(graphics, poly, h.color);
+				}
+			}
+		}
 
-        if (config.drawTile())
-        {
-            LocalPoint lp = p.getLocalLocation();
-            if (lp != null)
-            {
-                Polygon poly = Perspective.getCanvasTilePoly(client, lp);
-                if (poly != null)
-                {
-                    OverlayUtil.renderPolygon(graphics, poly, h.color);
-                }
-            }
-        }
-
-        if (config.drawLabel() && h.label != null && !h.label.isEmpty())
-        {
-            Point textLoc = p.getCanvasTextLocation(graphics, h.label, p.getLogicalHeight() + 40);
-            if (textLoc != null)
-            {
-                OverlayUtil.renderTextLocation(graphics, textLoc, h.label, h.color);
-            }
-        }
-    }
+		if (config.drawLabel() && h.label != null && !h.label.isEmpty())
+		{
+			Point textLoc = p.getCanvasTextLocation(graphics, h.label, p.getLogicalHeight() + 40);
+			if (textLoc != null)
+			{
+				OverlayUtil.renderTextLocation(graphics, textLoc, h.label, h.color);
+			}
+		}
+	}
 }

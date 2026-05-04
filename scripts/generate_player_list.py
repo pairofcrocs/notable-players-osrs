@@ -2,8 +2,8 @@
 """Regenerate the notable-players section of README.md from notable_players.json.
 
 Replaces the block between BEGIN PLAYERS and END PLAYERS markers with a
-markdown list grouped by category. Names in the "mods" group get the "Mod "
-prefix that the plugin applies in-game.
+markdown list grouped by category. Jagex Mods are not stored in the JSON —
+they're matched by name prefix in the plugin and shown as a static note.
 """
 import json
 import re
@@ -18,26 +18,31 @@ BEGIN = "<!-- BEGIN PLAYERS -->"
 END = "<!-- END PLAYERS -->"
 
 SECTIONS = [
-    ("creators",  "Plugin Creator",  ""),
-    ("streamers", "Streamers",       ""),
-    ("mods",      "Jagex Mods",      "Mod "),
-    ("uniques",   "Unique Accounts", ""),
+    ("creators",  "Plugin Creator"),
+    ("streamers", "Streamers"),
+    ("uniques",   "Unique Accounts"),
 ]
 
 
 def render(data):
     parts = []
-    for key, heading, prefix in SECTIONS:
+    for key, heading in SECTIONS:
         entries = data.get(key) or []
         if not entries:
             continue
         parts.append(f"### {heading}")
         parts.append("")
         for e in sorted(entries, key=lambda x: (x.get("name") or "").lower()):
-            name = (prefix + (e.get("name") or "")).strip()
+            name = (e.get("name") or "").strip()
             reason = (e.get("reason") or "").strip()
             parts.append(f"- **{name}** — {reason}" if reason else f"- **{name}**")
         parts.append("")
+
+    parts.append("### Jagex Mods")
+    parts.append("")
+    parts.append("Any player whose name starts with `Mod ` is highlighted automatically.")
+    parts.append("")
+
     return "\n".join(parts).rstrip() + "\n"
 
 

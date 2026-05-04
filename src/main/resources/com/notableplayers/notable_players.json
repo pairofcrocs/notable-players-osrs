@@ -7,10 +7,6 @@
     { "name": "Framed",  "reason": "Speedrunner / streamer" },
     { "name": "Settled", "reason": "YouTube — Swampletics, etc." }
   ],
-  "mods": [
-    { "name": "Ash",    "reason": "Jagex Mod — game content" },
-    { "name": "Kieren", "reason": "Jagex Mod" }
-  ],
   "uniques": [
     { "name": "Lynx Titan", "reason": "First account to 200M XP in all skills" },
     { "name": "Zezima",     "reason": "Iconic early high-level account" }
