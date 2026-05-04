@@ -24,18 +24,24 @@ The list below is generated automatically from [`notable_players.json`](src/main
 <!-- BEGIN PLAYERS -->
 ### Plugin Creator
 
-- **Two Crocs** — Notable Players plugin creator
+| Player | Description |
+| --- | --- |
+| **Two Crocs** | Notable Players plugin creator |
 
 ### Streamers
 
-- **B0aty** — Twitch streamer
-- **Framed** — Speedrunner / streamer
-- **Settled** — YouTube — Swampletics, etc.
+| Player | Description |
+| --- | --- |
+| **B0aty** | Twitch streamer |
+| **Framed** | Speedrunner / streamer |
+| **Settled** | YouTube — Swampletics, etc. |
 
 ### Unique Accounts
 
-- **Lynx Titan** — First account to 200M XP in all skills
-- **Zezima** — Iconic early high-level account
+| Player | Description |
+| --- | --- |
+| **Lynx Titan** | First account to 200M XP in all skills |
+| **Zezima** | Iconic early high-level account |
 
 ### Jagex Mods
 

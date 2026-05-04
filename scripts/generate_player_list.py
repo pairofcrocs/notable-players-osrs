@@ -24,6 +24,11 @@ SECTIONS = [
 ]
 
 
+def escape_cell(text):
+    """Escape pipe and backslash so user content can't break the table."""
+    return text.replace("\\", "\\\\").replace("|", "\\|")
+
+
 def render(data):
     parts = []
     for key, heading in SECTIONS:
@@ -32,10 +37,12 @@ def render(data):
             continue
         parts.append(f"### {heading}")
         parts.append("")
+        parts.append("| Player | Description |")
+        parts.append("| --- | --- |")
         for e in sorted(entries, key=lambda x: (x.get("name") or "").lower()):
-            name = (e.get("name") or "").strip()
-            reason = (e.get("reason") or "").strip()
-            parts.append(f"- **{name}** — {reason}" if reason else f"- **{name}**")
+            name = escape_cell((e.get("name") or "").strip())
+            reason = escape_cell((e.get("reason") or "").strip())
+            parts.append(f"| **{name}** | {reason} |")
         parts.append("")
 
     parts.append("### Jagex Mods")
