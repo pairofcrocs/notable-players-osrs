@@ -22,12 +22,6 @@ Jagex Mods do not need to be submitted.
 The list below is generated automatically from [`notable_players.json`](src/main/resources/com/notableplayers/notable_players.json). Don't edit this section by hand — edit the JSON and the next push will regenerate it.
 
 <!-- BEGIN PLAYERS -->
-### Plugin Creator
-
-| Player | Description |
-| --- | --- |
-| **Two Crocs** | Notable Players plugin creator |
-
 ### Streamers
 
 | Player | Description |
