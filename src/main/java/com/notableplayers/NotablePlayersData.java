@@ -62,11 +62,8 @@ class NotablePlayersData
 
 	private static final String RESOURCE = "/com/notableplayers/notable_players.json";
 
-	// While the repo is private this URL 404s and the plugin falls back to the
-	// bundled list. The fetch starts working as soon as the repo (or this file)
-	// is publicly readable.
 	private static final HttpUrl REMOTE_URL = HttpUrl.parse(
-		"https://raw.githubusercontent.com/pairofcrocs/notable-players/main/src/main/resources/com/notableplayers/notable_players.json");
+		"https://raw.githubusercontent.com/pairofcrocs/notable-players-osrs/main/src/main/resources/com/notableplayers/notable_players.json");
 
 	private final Gson gson;
 	private final OkHttpClient httpClient;

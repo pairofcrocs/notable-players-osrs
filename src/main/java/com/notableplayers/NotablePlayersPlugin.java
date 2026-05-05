@@ -46,6 +46,7 @@ public class NotablePlayersPlugin extends Plugin
 	@Inject private NotablePlayersMinimapOverlay minimapOverlay;
 	@Inject private NotablePlayersInfoOverlay infoOverlay;
 	@Inject private NotablePlayersData data;
+	@Inject private NotablePlayersConfig config;
 	@Inject private ClientThread clientThread;
 
 	@Override
@@ -55,7 +56,10 @@ public class NotablePlayersPlugin extends Plugin
 		overlayManager.add(overlay);
 		overlayManager.add(minimapOverlay);
 		overlayManager.add(infoOverlay);
-		data.refresh(() -> clientThread.invoke(overlay::rebuildLookup));
+		if (config.fetchRemoteList())
+		{
+			data.refresh(() -> clientThread.invoke(overlay::rebuildLookup));
+		}
 	}
 
 	@Override
@@ -69,9 +73,14 @@ public class NotablePlayersPlugin extends Plugin
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (NotablePlayersConfig.GROUP.equals(event.getGroup()))
+		if (!NotablePlayersConfig.GROUP.equals(event.getGroup()))
 		{
-			overlay.rebuildLookup();
+			return;
+		}
+		overlay.rebuildLookup();
+		if ("fetchRemoteList".equals(event.getKey()) && config.fetchRemoteList())
+		{
+			data.refresh(() -> clientThread.invoke(overlay::rebuildLookup));
 		}
 	}
 

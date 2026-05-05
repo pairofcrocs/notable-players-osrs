@@ -59,6 +59,15 @@ public interface NotablePlayersConfig extends Config
 	)
 	default String submitInfo() { return "See description — open an issue to add a name."; }
 
+	@ConfigItem(
+		keyName = "fetchRemoteList",
+		name = "Fetch list from GitHub",
+		description = "When on, the plugin downloads the latest curated list from the plugin's GitHub repository on startup. When off, only the list bundled with the plugin is used.",
+		section = aboutSection,
+		position = 1
+	)
+	default boolean fetchRemoteList() { return true; }
+
 	@Alpha
 	@ConfigItem(keyName = "streamerColor", name = "Color", description = "Color used for streamers", section = streamersSection, position = 0)
 	default Color streamerColor() { return new Color(170, 0, 255); }

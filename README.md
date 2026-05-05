@@ -4,11 +4,17 @@ A [RuneLite](https://runelite.net) plugin that highlights notable Old School Run
 
 ## What gets highlighted
 
-- **Streamers** and **Unique Accounts** — bundled, curated lists. Submit additions via [the issue form](../../issues/new/choose).
+- **Streamers** and **Unique Accounts** — curated lists pulled from this repository. Submit additions via [the issue form](../../issues/new/choose).
 - **Jagex Mods** — matched automatically by the reserved `Mod ` name prefix; no submissions needed.
 - **Custom** — your own list, managed in the plugin's config (`Name:Description` per line).
 
 Each category has its own configurable color and label. Display options include model outline, tile, floating label, minimap text, and a top-right info panel that lists nearby matches with the reason they're notable. Your own character is never highlighted.
+
+## How the list is loaded
+
+The plugin ships with a copy of [`notable_players.json`](src/main/resources/com/notableplayers/notable_players.json) embedded in the JAR. **On every plugin startup it also fetches the latest copy of that file directly from this repository** at `raw.githubusercontent.com/pairofcrocs/notable-players-osrs/main/...`, so any merged submission goes live the next time the plugin starts — no plugin update required.
+
+If the network request fails for any reason (no internet, GitHub unreachable, malformed payload), the bundled copy is used instead. You can disable the network fetch entirely with the **Fetch list from GitHub** toggle in the plugin's config; with it off, only the bundled list is consulted.
 
 ## Submitting a player
 
