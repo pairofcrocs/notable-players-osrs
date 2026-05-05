@@ -23,7 +23,7 @@ body:
       label: Category
       description: Which list should this player be added to?
       options:
-        - Streamer
+        - Content Creator
         - Unique Account
     validations:
       required: true

@@ -36,8 +36,8 @@ import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
 	name = "Notable Players",
-	description = "Highlights notable players (streamers, Jagex Mods, unique accounts) and your own custom list",
-	tags = {"highlight", "players", "streamers", "mods", "unique"}
+	description = "Highlights notable players (content creators, Jagex Mods, unique accounts) and your own custom list",
+	tags = {"highlight", "players", "content creators", "streamers", "mods", "unique"}
 )
 public class NotablePlayersPlugin extends Plugin
 {

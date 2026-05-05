@@ -4,7 +4,7 @@ A [RuneLite](https://runelite.net) plugin that highlights notable Old School Run
 
 ## What gets highlighted
 
-- **Streamers** and **Unique Accounts** — curated lists pulled from this repository. Submit additions via [the issue form](../../issues/new/choose).
+- **Content Creators** and **Unique Accounts** — curated lists pulled from this repository. Submit additions via [the issue form](../../issues/new/choose).
 - **Jagex Mods** — matched automatically by the reserved `Mod ` name prefix; no submissions needed.
 - **Custom** — your own list, managed in the plugin's config (`Name:Description` per line).
 
@@ -27,7 +27,7 @@ Jagex Mods do not need to be submitted.
 The list below is generated automatically from [`notable_players.json`](src/main/resources/com/notableplayers/notable_players.json). Don't edit this section by hand — edit the JSON and the next push will regenerate it.
 
 <!-- BEGIN PLAYERS -->
-### Streamers
+### Content Creators
 
 | Player | Description |
 | --- | --- |

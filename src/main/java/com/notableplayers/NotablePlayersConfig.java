@@ -38,13 +38,13 @@ public interface NotablePlayersConfig extends Config
 
 	@ConfigSection(
 		name = "About",
-		description = "The Streamers and Unique Accounts lists are bundled with the plugin. Jagex Mods are detected automatically by the 'Mod ' name prefix. Open a pull request against the plugin repository to add or remove a name.",
+		description = "The Content Creators and Unique Accounts lists are bundled with the plugin. Jagex Mods are detected automatically by the 'Mod ' name prefix. Open a pull request against the plugin repository to add or remove a name.",
 		position = 0,
 		closedByDefault = false
 	)
 	String aboutSection = "about";
 
-	@ConfigSection(name = "Streamers",       description = "Display options for streamers",       position = 1, closedByDefault = false) String streamersSection = "streamers";
+	@ConfigSection(name = "Content Creators", description = "Display options for content creators", position = 1, closedByDefault = false) String streamersSection = "streamers";
 	@ConfigSection(name = "Jagex Mods",      description = "Display options for Jagex Mods",      position = 2, closedByDefault = false) String modsSection      = "mods";
 	@ConfigSection(name = "Unique Accounts", description = "Display options for unique accounts", position = 3, closedByDefault = false) String uniquesSection   = "uniques";
 	@ConfigSection(name = "Custom",          description = "Your own list of names",              position = 4, closedByDefault = false) String customSection    = "custom";
@@ -69,11 +69,11 @@ public interface NotablePlayersConfig extends Config
 	default boolean fetchRemoteList() { return true; }
 
 	@Alpha
-	@ConfigItem(keyName = "streamerColor", name = "Color", description = "Color used for streamers", section = streamersSection, position = 0)
+	@ConfigItem(keyName = "streamerColor", name = "Color", description = "Color used for content creators", section = streamersSection, position = 0)
 	default Color streamerColor() { return new Color(170, 0, 255); }
 
-	@ConfigItem(keyName = "streamerLabel", name = "Label", description = "Text drawn above streamers", section = streamersSection, position = 1)
-	default String streamerLabel() { return "Streamer"; }
+	@ConfigItem(keyName = "streamerLabel", name = "Label", description = "Text drawn above content creators", section = streamersSection, position = 1)
+	default String streamerLabel() { return "Content Creator"; }
 
 	@Alpha
 	@ConfigItem(keyName = "modColor", name = "Color", description = "Color used for Jagex Mods", section = modsSection, position = 0)

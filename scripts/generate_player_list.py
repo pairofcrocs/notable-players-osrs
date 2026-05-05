@@ -18,7 +18,7 @@ BEGIN = "<!-- BEGIN PLAYERS -->"
 END = "<!-- END PLAYERS -->"
 
 SECTIONS = [
-    ("streamers", "Streamers"),
+    ("streamers", "Content Creators"),
     ("uniques",   "Unique Accounts"),
 ]
 
