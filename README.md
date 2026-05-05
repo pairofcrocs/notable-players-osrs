@@ -36,6 +36,7 @@ The list below is generated automatically from [`notable_players.json`](src/main
 | **Alkan** | Progress YouTuber/streamer |
 | **B0aty** | Twitch streamer |
 | **Bonesaw** | PK and progress YouTuber |
+| **CampinOnline** | Clue scroll content creator |
 | **Chris Archie** | ChrisArchieProds YouTuber |
 | **Faux** | Progress streamer |
 | **Framed** | PK YouTuber / speedrunner |
