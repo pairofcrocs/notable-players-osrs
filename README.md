@@ -49,10 +49,7 @@ Any player whose name starts with `Mod ` is highlighted automatically.
 
 ## Building / running
 
-This is a standard RuneLite external-plugin Gradle project.
-
-- `./gradlew run` launches RuneLite with the plugin loaded.
-- `./run-jagex.sh` (macOS) launches it with credentials borrowed from a currently-running official Jagex Launcher session.
+This is a standard RuneLite external-plugin Gradle project. `./gradlew run` launches RuneLite with the plugin loaded.
 
 ## License
 
